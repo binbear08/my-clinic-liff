@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบจองคิวคลินิก</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; padding: 20px; background: #f4f5f7; color: #333; margin: 0; }
+    .container { max-width: 450px; margin: 0 auto; }
+    .form-box { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    h2 { text-align: center; color: #06C755; margin-top: 0; margin-bottom: 20px; }
+    label { display: block; margin: 12px 0 6px; font-weight: 600; color: #555; }
+    input, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
+    button { background: #06C755; color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
+    button:hover { background: #05a546; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    #status { text-align: center; margin-top: 15px; font-weight: bold; }
+    .success { color: #06C755; }
+    .error { color: #ff4d4f; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="form-box">
+      <h2>จองคิวพบแพทย์</h2>
+      <label for="patientName">ชื่อผู้ป่วย</label>
+      <input type="text" id="patientName" placeholder="กรุณากรอกชื่อ-นามสกุล">
+
+      <label for="doctor">เลือกแพทย์</label>
+      <select id="doctor">
+        <option value="หมอสมชาย">นายแพทย์สมชาย</option>
+        <option value="หมอสมหญิง">แพทย์หญิงสมหญิง</option>
+      </select>
+
+      <label for="date">วันที่</label>
+      <input type="date" id="date">
+
+      <label for="time">เวลา</label>
+      <input type="time" id="time">
+
+      <button id="submitBtn" onclick="bookQueue()">จองคิว</button>
+      <div id="status"></div>
+    </div>
+  </div>
+
+  <script>
+    const LIFF_ID = "2007785068-1gROkD8p"; // LIFF ID ของคุณ
+    const WEB_APP_URL = "https://script.google.com/macros/s/YOUR_WEB_APP_URL/exec"; // Web App URL ของคุณ
+
+    const submitBtn = document.getElementById('submitBtn');
+    const statusDiv = document.getElementById('status');
+    const dateInput = document.getElementById('date');
+    let userId = '';
+    let isLiffReady = false;
+
+    window.onload = async function() {
+      submitBtn.disabled = true;
+      // ตั้งค่าวันที่ขั้นต่ำเป็นวันนี้
+      const today = new Date();
+      today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+      dateInput.min = today.toISOString().split('T')[0];
+
+      // ตรวจสอบว่าอยู่ใน LIFF หรือไม่
+      if (typeof liff !== 'undefined' && liff.init) {
+        try {
+          await liff.init({ liffId: LIFF_ID });
+          if (liff.isLoggedIn()) {
+            const profile = await liff.getProfile();
+            userId = profile.userId;
+            document.getElementById('patientName').value = profile.displayName;
+            isLiffReady = true;
+          }
+        } catch(err) {
+          console.warn("LIFF ไม่พร้อมใช้งาน:", err);
+        }
+      }
+      submitBtn.disabled = false;
+    };
+
+    async function bookQueue() {
+      const patientName = document.getElementById('patientName').value.trim();
+      const doctor = document.getElementById('doctor').value;
+      const date = dateInput.value;
+      const time = document.getElementById('time').value;
+
+      if (!patientName || !doctor || !date || !time) {
+        statusDiv.className = 'error';
+        statusDiv.textContent = 'กรุณากรอกข้อมูลให้ครบทุกช่อง';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      statusDiv.className = '';
+      statusDiv.textContent = 'กำลังส่งข้อมูลการจอง...';
+
+      const payload = { patientName, doctor, date, time, userId: isLiffReady ? userId : '' };
+
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        // ตรวจสอบ response
+        if (!response.ok) throw new Error('ไม่สามารถติดต่อ Web App ได้');
+        statusDiv.className = 'success';
+        statusDiv.textContent = '✅ จองคิวเรียบร้อย!';
+        if (isLiffReady) setTimeout(() => liff.closeWindow(), 3000);
+      } catch(err) {
+        console.error(err);
+        statusDiv.className = 'error';
+        statusDiv.textContent = '❌ เกิดข้อผิดพลาด: ' + err.message;
+        submitBtn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
