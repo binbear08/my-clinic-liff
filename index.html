@@ -1,204 +1,217 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบจองคิวคลินิก</title>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      padding: 20px;
-      background: #f4f5f7;
-      color: #333;
-      margin: 0;
-    }
-    .container {
-      max-width: 450px;
-      margin: 0 auto;
-    }
-    .form-box {
-      background: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-    h2 {
-      text-align: center;
-      color: #06C755; /* LINE Green */
-      margin-top: 0;
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: 600;
-      color: #555;
-    }
-    input, select {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box; /* Important for padding */
-      font-size: 16px;
-    }
-    button {
-      background: #06C755;
-      color: white;
-      border: none;
-      padding: 14px;
-      width: 100%;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background: #05a546;
-    }
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-    #status {
-      text-align: center;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    .success { color: #06C755; }
-    .error { color: #ff4d4f; }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบจองคิวคลินิก</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      padding: 20px;
+      background: #f4f5f7;
+      color: #333;
+      margin: 0;
+    }
+    .container {
+      max-width: 450px;
+      margin: 0 auto;
+    }
+    .form-box {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    h2 {
+      text-align: center;
+      color: #06C755; /* LINE Green */
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 600;
+      color: #555;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box; /* Important for padding */
+      font-size: 16px;
+    }
+    button {
+      background: #06C755;
+      color: white;
+      border: none;
+      padding: 14px;
+      width: 100%;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background: #05a546;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    #status {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .success { color: #06C755; }
+    .error { color: #ff4d4f; }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <div class="form-box">
-      <h2>จองคิวพบแพทย์</h2>
-      <label for="patientName">ชื่อผู้ป่วย</label>
-      <input type="text" id="patientName" placeholder="กรุณากรอกชื่อ-นามสกุล">
+  <div class="container">
+    <div class="form-box">
+      <h2>จองคิวพบแพทย์</h2>
+      <label for="patientName">ชื่อผู้ป่วย</label>
+      <input type="text" id="patientName" placeholder="กรุณากรอกชื่อ-นามสกุล">
 
-      <label for="doctor">เลือกแพทย์</label>
-      <select id="doctor">
-        <option value="หมอสมชาย">นายแพทย์สมชาย</option>
-        <option value="หมอสมหญิง">แพทย์หญิงสมหญิง</option>
-      </select>
+      <label for="doctor">เลือกแพทย์</label>
+      <select id="doctor">
+        <option value="หมอสมชาย">นายแพทย์สมชาย</option>
+        <option value="หมอสมหญิง">แพทย์หญิงสมหญิง</option>
+      </select>
 
-      <label for="date">วันที่</label>
-      <input type="date" id="date">
+      <label for="date">วันที่</label>
+      <input type="date" id="date">
 
-      <label for="time">เวลา</label>
-      <input type="time" id="time">
+      <label for="time">เวลา</label>
+      <input type="time" id="time">
 
-      <button id="submitBtn" onclick="bookQueue()">จองคิว</button>
-      <div id="status"></div>
-    </div>
-  </div>
+      <button id="submitBtn" onclick="bookQueue()">จองคิว</button>
+      <div id="status"></div>
+    </div>
+  </div>
 
-  <script>
-    // --- ค่าที่ต้องแก้ไข ---
-    const LIFF_ID = "2007785068-1gROkD8p"; // 👉 ใส่ LIFF ID ของคุณ
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwMq1O9PqgmMdIilwztsIdhYIXEoJIQaMUJ9LpHC3Txk4h956iflkp3R1iivuCMP80enA/exec"; // 👉 ใส่ Web App URL ของคุณ
+  <script>
+    // --- ค่าที่ต้องแก้ไข ---
+    const LIFF_ID = "2007785068-1gROkD8p";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwMq1O9PqgmMdIilwztsIdhYIXEoJIQaMUJ9LpHC3Txk4h956iflkp3R1iivuCMP80enA/exec";
 
-    // --- ตัวแปรสำหรับใช้งาน ---
-    const submitBtn = document.getElementById('submitBtn');
-    const statusDiv = document.getElementById('status');
-    const dateInput = document.getElementById('date');
-    let userId = '';
+    // --- ตัวแปรสำหรับใช้งาน ---
+    const submitBtn = document.getElementById('submitBtn');
+    const statusDiv = document.getElementById('status');
+    const dateInput = document.getElementById('date');
+    let userId = '';
+    let isLiffReady = false; // เพิ่มตัวแปรสถานะ LIFF
 
-    /**
-     * ฟังก์ชันเริ่มต้นการทำงานของ LIFF เมื่อหน้าเว็บโหลดเสร็จ
-     */
-    window.onload = async function() {
-      statusDiv.textContent = 'กำลังโหลดข้อมูล...';
-      submitBtn.disabled = true; // ปิดปุ่มไว้ก่อนระหว่างโหลด
+    /**
+     * ฟังก์ชันเริ่มต้นการทำงาน
+     */
+    window.onload = async function() {
+      statusDiv.textContent = 'กำลังโหลดข้อมูล...';
+      submitBtn.disabled = true;
 
-      try {
-        await liff.init({ liffId: LIFF_ID });
+      // ตั้งค่าวันที่ขั้นต่ำเป็นวันปัจจุบันเสมอ
+      const today = new Date();
+      today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+      dateInput.min = today.toISOString().split('T')[0];
 
-        if (!liff.isInClient()) {
-          statusDiv.className = 'error';
-          statusDiv.textContent = 'กรุณาเปิดหน้านี้ในแอปพลิเคชัน LINE';
-        } else if (!liff.isLoggedIn()) {
-          // ถ้าอยู่ใน LINE แต่ยังไม่ล็อกอิน ให้ไปหน้าล็อกอิน (ไม่ควรเกิด loop ที่นี่)
-          statusDiv.textContent = 'กรุณาล็อกอินเพื่อใช้งาน';
-          liff.login({ redirectUri: window.location.href });
-        } else {
-          // ถ้าล็อกอินแล้ว ให้ดึงข้อมูลโปรไฟล์
-          const profile = await liff.getProfile();
-          userId = profile.userId;
-          document.getElementById('patientName').value = profile.displayName; // ใส่ชื่อผู้ใช้ LINE ให้เป็นค่าเริ่มต้น
-          
-          // ตั้งค่าวันที่ขั้นต่ำเป็นวันปัจจุบัน
-          const today = new Date();
-          today.setMinutes(today.getMinutes() - today.getTimezoneOffset()); // Adjust for timezone
-          dateInput.min = today.toISOString().split('T')[0];
+      // ตรวจสอบว่า `liff` มีอยู่จริงหรือไม่
+      if (typeof liff !== 'undefined' && liff.init) {
+        try {
+          await liff.init({ liffId: LIFF_ID });
 
-          statusDiv.textContent = ''; // ล้างข้อความสถานะ
-          submitBtn.disabled = false; // เปิดปุ่มให้ใช้งานได้
-        }
-      } catch (err) {
-        console.error(err);
-        statusDiv.className = 'error';
-        statusDiv.textContent = 'เกิดข้อผิดพลาดในการโหลด LIFF';
-      }
-    };
+          if (!liff.isLoggedIn()) {
+            statusDiv.textContent = 'กรุณาล็อกอินเพื่อใช้งาน';
+            liff.login({ redirectUri: window.location.href });
+          } else {
+            const profile = await liff.getProfile();
+            userId = profile.userId;
+            document.getElementById('patientName').value = profile.displayName;
+            isLiffReady = true;
+            statusDiv.textContent = '';
+            submitBtn.disabled = false;
+          }
+        } catch (err) {
+          console.error(err);
+          statusDiv.className = 'error';
+          statusDiv.textContent = 'เกิดข้อผิดพลาดในการโหลด LIFF';
+        }
+      } else {
+        // กรณีที่ไม่ได้เปิดในแอป LINE (เบราว์เซอร์ปกติ)
+        console.log('ไม่ได้ใช้งานใน LIFF environment');
+        statusDiv.textContent = 'สามารถใช้งานได้ตามปกติ';
+        submitBtn.disabled = false;
+      }
+    };
 
-    /**
-     * ฟังก์ชันจองคิวเมื่อกดปุ่ม
-     */
-    async function bookQueue() {
-      // ดึงข้อมูลจากฟอร์ม
-      const patientName = document.getElementById('patientName').value.trim();
-      const doctor = document.getElementById('doctor').value;
-      const date = dateInput.value;
-      const time = document.getElementById('time').value;
+    /**
+     * ฟังก์ชันจองคิวเมื่อกดปุ่ม
+     */
+    async function bookQueue() {
+      // ดึงข้อมูลจากฟอร์ม
+      const patientName = document.getElementById('patientName').value.trim();
+      const doctor = document.getElementById('doctor').value;
+      const date = dateInput.value;
+      const time = document.getElementById('time').value;
 
-      // ตรวจสอบว่ากรอกข้อมูลครบหรือไม่
-      if (!patientName || !doctor || !date || !time) {
-        statusDiv.className = 'error';
-        statusDiv.textContent = 'กรุณากรอกข้อมูลให้ครบทุกช่อง';
-        return;
-      }
+      // ตรวจสอบว่ากรอกข้อมูลครบหรือไม่
+      if (!patientName || !doctor || !date || !time) {
+        statusDiv.className = 'error';
+        statusDiv.textContent = 'กรุณากรอกข้อมูลให้ครบทุกช่อง';
+        return;
+      }
 
-      // ปิดปุ่มและแสดงสถานะ
-      submitBtn.disabled = true;
-      statusDiv.className = '';
-      statusDiv.textContent = 'กำลังส่งข้อมูลการจอง...';
+      // ปิดปุ่มและแสดงสถานะ
+      submitBtn.disabled = true;
+      statusDiv.className = '';
+      statusDiv.textContent = 'กำลังส่งข้อมูลการจอง...';
 
-      // เตรียมข้อมูลที่จะส่งไป Google Apps Script
-      const payload = { userId, patientName, doctor, date, time };
+      // กำหนด userId เฉพาะเมื่ออยู่ใน LIFF เท่านั้น
+      const payload = {
+        patientName,
+        doctor,
+        date,
+        time,
+        userId: isLiffReady ? userId : ''
+      };
 
-      try {
-        const response = await fetch(WEB_APP_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload),
-          redirect: "follow"
-        });
+      try {
+        const response = await fetch(WEB_APP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload),
+          redirect: "follow"
+        });
 
-        const resultText = await response.text();
-        const result = JSON.parse(resultText);
+        const resultText = await response.text();
+        const result = JSON.parse(resultText);
 
-        if (result.status === "OK") {
-          statusDiv.className = 'success';
-          statusDiv.textContent = `✅ จองคิว #${result.queueNo} เรียบร้อย! ระบบได้ส่งบัตรคิวไปให้คุณใน LINE แล้ว`;
-          // ปิดหน้าต่าง LIFF หลังจากสำเร็จ 3 วินาที
-          setTimeout(() => {
-            liff.closeWindow();
-          }, 3000);
-        } else {
-          throw new Error(result.message || 'ไม่สามารถจองคิวได้');
-        }
+        if (result.status === "OK") {
+          statusDiv.className = 'success';
+          statusDiv.textContent = `✅ จองคิว #${result.queueNo} เรียบร้อย!`;
+          // ปิดหน้าต่าง LIFF หากเปิดจาก LINE
+          if (isLiffReady) {
+            statusDiv.textContent += ` ระบบได้ส่งบัตรคิวไปให้คุณใน LINE แล้ว`;
+            setTimeout(() => {
+              liff.closeWindow();
+            }, 3000);
+          }
+        } else {
+          throw new Error(result.message || 'ไม่สามารถจองคิวได้');
+        }
 
-      } catch (err) {
-        console.error(err);
-        statusDiv.className = 'error';
-        statusDiv.textContent = "❌ เกิดข้อผิดพลาด: " + err.message;
-        submitBtn.disabled = false; // เปิดปุ่มให้ลองใหม่ได้
-      }
-    }
-  </script>
+      } catch (err) {
+        console.error(err);
+        statusDiv.className = 'error';
+        statusDiv.textContent = "❌ เกิดข้อผิดพลาด: " + err.message;
+        submitBtn.disabled = false;
+      }
+    }
+  </script>
 </body>
 </html>
