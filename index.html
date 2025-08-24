@@ -98,15 +98,15 @@
 
   <script>
     // --- ค่าที่ต้องแก้ไข ---
-    const LIFF_ID = "2007785068-1gROkD8p";
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwMq1O9PqgmMdIilwztsIdhYIXEoJIQaMUJ9LpHC3Txk4h956iflkp3R1iivuCMP80enA/exec";
+    const LIFF_ID = "2007785068-1gROkD8p"; // 👉 ใส่ LIFF ID ของคุณ
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz_8RuH-u9C3ebxij7utz4jLjOKP0yD96qxPc7KXxsK29N_FuopPrEypzFdOx1eaEFmtw/exec"; // 👉 ใส่ Web App URL ของคุณ
 
     // --- ตัวแปรสำหรับใช้งาน ---
     const submitBtn = document.getElementById('submitBtn');
     const statusDiv = document.getElementById('status');
     const dateInput = document.getElementById('date');
     let userId = '';
-    let isLiffReady = false; // เพิ่มตัวแปรสถานะ LIFF
+    let isLiffReady = false; // เพิ่มตัวแปรสถานะ LIFF
 
     /**
      * ฟังก์ชันเริ่มต้นการทำงาน
@@ -120,33 +120,34 @@
       today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
       dateInput.min = today.toISOString().split('T')[0];
 
-      // ตรวจสอบว่า `liff` มีอยู่จริงหรือไม่
-      if (typeof liff !== 'undefined' && liff.init) {
-        try {
-          await liff.init({ liffId: LIFF_ID });
+      // ตรวจสอบว่า `liff` มีอยู่จริงหรือไม่
+      if (typeof liff !== 'undefined' && liff.init) {
+        try {
+          await liff.init({ liffId: LIFF_ID });
 
-          if (!liff.isLoggedIn()) {
-            statusDiv.textContent = 'กรุณาล็อกอินเพื่อใช้งาน';
-            liff.login({ redirectUri: window.location.href });
-          } else {
-            const profile = await liff.getProfile();
-            userId = profile.userId;
-            document.getElementById('patientName').value = profile.displayName;
-            isLiffReady = true;
-            statusDiv.textContent = '';
-            submitBtn.disabled = false;
-          }
-        } catch (err) {
-          console.error(err);
-          statusDiv.className = 'error';
-          statusDiv.textContent = 'เกิดข้อผิดพลาดในการโหลด LIFF';
-        }
-      } else {
-        // กรณีที่ไม่ได้เปิดในแอป LINE (เบราว์เซอร์ปกติ)
-        console.log('ไม่ได้ใช้งานใน LIFF environment');
-        statusDiv.textContent = 'สามารถใช้งานได้ตามปกติ';
-        submitBtn.disabled = false;
-      }
+          if (!liff.isLoggedIn()) {
+            // ไม่ต้องแสดง error แต่ให้พาไปหน้า login เลย
+            statusDiv.textContent = 'กรุณาล็อกอินเพื่อใช้งาน';
+            liff.login({ redirectUri: window.location.href });
+          } else {
+            const profile = await liff.getProfile();
+            userId = profile.userId;
+            document.getElementById('patientName').value = profile.displayName;
+            isLiffReady = true;
+            statusDiv.textContent = '';
+            submitBtn.disabled = false;
+          }
+        } catch (err) {
+          console.error(err);
+          statusDiv.className = 'error';
+          statusDiv.textContent = 'เกิดข้อผิดพลาดในการโหลด LIFF';
+        }
+      } else {
+        // กรณีที่ไม่ได้เปิดในแอป LINE (เบราว์เซอร์ปกติ)
+        console.log('ไม่ได้ใช้งานใน LIFF environment');
+        statusDiv.textContent = ''; // ลบข้อความสถานะออก
+        submitBtn.disabled = false;
+      }
     };
 
     /**
@@ -171,14 +172,14 @@
       statusDiv.className = '';
       statusDiv.textContent = 'กำลังส่งข้อมูลการจอง...';
 
-      // กำหนด userId เฉพาะเมื่ออยู่ใน LIFF เท่านั้น
+      // เตรียมข้อมูลที่จะส่งไป Google Apps Script
       const payload = {
-        patientName,
-        doctor,
-        date,
-        time,
-        userId: isLiffReady ? userId : ''
-      };
+        patientName,
+        doctor,
+        date,
+        time,
+        userId: isLiffReady ? userId : '' // ส่ง userId เฉพาะเมื่ออยู่ใน LIFF เท่านั้น
+      };
 
       try {
         const response = await fetch(WEB_APP_URL, {
@@ -195,12 +196,12 @@
           statusDiv.className = 'success';
           statusDiv.textContent = `✅ จองคิว #${result.queueNo} เรียบร้อย!`;
           // ปิดหน้าต่าง LIFF หากเปิดจาก LINE
-          if (isLiffReady) {
-            statusDiv.textContent += ` ระบบได้ส่งบัตรคิวไปให้คุณใน LINE แล้ว`;
-            setTimeout(() => {
-              liff.closeWindow();
-            }, 3000);
-          }
+          if (isLiffReady) {
+            statusDiv.textContent += ` ระบบได้ส่งบัตรคิวไปให้คุณใน LINE แล้ว`;
+            setTimeout(() => {
+              liff.closeWindow();
+            }, 3000);
+          }
         } else {
           throw new Error(result.message || 'ไม่สามารถจองคิวได้');
         }
@@ -209,7 +210,7 @@
         console.error(err);
         statusDiv.className = 'error';
         statusDiv.textContent = "❌ เกิดข้อผิดพลาด: " + err.message;
-        submitBtn.disabled = false;
+        submitBtn.disabled = false; // เปิดปุ่มให้ลองใหม่ได้
       }
     }
   </script>
