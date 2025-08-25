@@ -1,64 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-  <meta charset="utf-8">
-  <title>ลงคิวพบแพทย์</title>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ลิงก์ไปยังโซเชียลมีเดีย</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 300px;
+      animation: fadeIn 0.5s ease-in;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    a {
+      display: block;
+      margin: 12px 0;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      color: white;
+      transition: transform 0.2s, opacity 0.3s;
+    }
+    a:hover {
+      transform: translateY(-3px);
+      opacity: 0.9;
+    }
+    .facebook { background-color: #1877f2; }
+    .twitter  { background-color: #000000; }
+    .instagram { 
+      background: radial-gradient(circle at 30% 30%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-  <h2>ระบบลงคิวพบแพทย์</h2>
-  <form id="queueForm">
-    <input type="text" id="name" placeholder="ชื่อ" required><br>
-    <input type="text" id="idcard" placeholder="รหัสบัตรประชาชน" required><br>
-    <input type="text" id="phone" placeholder="เบอร์โทร" required><br>
-    <input type="text" id="activity" placeholder="กิจกรรม/เหตุผล" required><br>
-    <input type="date" id="date" required><br>
-    <input type="time" id="time" required><br>
-    <button type="submit">ลงคิว</button>
-  </form>
-
-  <p id="result"></p>
-
-  <script>
-    // แก้ไข: ลบบรรทัดที่ซ้ำซ้อนออก
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbwMq1O9PqgmMdIilwztsIdhYIXEoJIQaMUJ9LpHC3Txk4h956iflkp3R1iivuCMP80enA/exec";
-    const liffId = "2007785068-1gROkD8p";
-
-    async function main() {
-      await liff.init({ liffId });
-      if (!liff.isLoggedIn()) {
-        liff.login();
-      }
-    }
-    main();
-
-    document.getElementById("queueForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const profile = await liff.getProfile();
-
-      const data = {
-        userId: profile.userId,
-        name: document.getElementById("name").value,
-        idcard: document.getElementById("idcard").value,
-        phone: document.getElementById("phone").value,
-        activity: document.getElementById("activity").value,
-        date: document.getElementById("date").value,
-        time: document.getElementById("time").value
-      };
-
-      try {
-        const res = await fetch(scriptUrl, {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: { "Content-Type": "application/json" }
-        });
-        const result = await res.json();
-        document.getElementById("result").innerText = "ลงคิวสำเร็จ! คิวที่: " + result.queue;
-      } catch (err) {
-        document.getElementById("result").innerText = "❌ บันทึกไม่สำเร็จ: " + err;
-      }
-    });
-  </script>
-
+  <div class="container">
+    <h2>🌐 ติดตามเราได้ที่</h2>
+    <a href="https://www.facebook.com/" target="_blank" class="facebook">Facebook</a>
+    <a href="https://x.com/" target="_blank" class="twitter">X (Twitter)</a>
+    <a href="https://www.instagram.com/" target="_blank" class="instagram">Instagram</a>
+  </div>
 </body>
 </html>
