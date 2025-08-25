@@ -1,0 +1,61 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ลงคิวพบแพทย์</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <h2>ระบบลงคิวพบแพทย์</h2>
+  <form id="queueForm">
+    <input type="text" id="name" placeholder="ชื่อ" required><br>
+    <input type="text" id="idcard" placeholder="รหัสบัตรประชาชน" required><br>
+    <input type="text" id="phone" placeholder="เบอร์โทร" required><br>
+    <input type="text" id="activity" placeholder="กิจกรรม/เหตุผล" required><br>
+    <input type="date" id="date" required><br>
+    <input type="time" id="time" required><br>
+    <button type="submit">ลงคิว</button>
+  </form>
+
+  <p id="result"></p>
+
+  <script>
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwMq1O9PqgmMdIilwztsIdhYIXEoJIQaMUJ9LpHC3Txk4h956iflkp3R1iivuCMP80enA/exec";
+    const liffId = "2007785068-1gROkD8p";
+
+    async function main() {
+      await liff.init({ liffId });
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      }
+    }
+    main();
+
+    document.getElementById("queueForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const profile = await liff.getProfile();
+
+      const data = {
+        userId: profile.userId,
+        name: document.getElementById("name").value,
+        idcard: document.getElementById("idcard").value,
+        phone: document.getElementById("phone").value,
+        activity: document.getElementById("activity").value,
+        date: document.getElementById("date").value,
+        time: document.getElementById("time").value
+      };
+
+      const res = await fetch(scriptUrl, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+      });
+
+      const result = await res.json();
+      document.getElementById("result").innerText = "ลงคิวสำเร็จ! คิวที่: " + result.queue;
+    });
+  </script>
+</body>
+</html>
