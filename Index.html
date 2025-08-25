@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ลิงก์ไปยังโซเชียลมีเดีย</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 300px;
+      animation: fadeIn 0.5s ease-in;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    a {
+      display: block;
+      margin: 12px 0;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      color: white;
+      transition: transform 0.2s, opacity 0.3s;
+    }
+    a:hover {
+      transform: translateY(-3px);
+      opacity: 0.9;
+    }
+    .facebook { background-color: #1877f2; }
+    .twitter  { background-color: #000000; }
+    .instagram { 
+      background: radial-gradient(circle at 30% 30%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🌐 ติดตามเราได้ที่</h2>
+    <a href="https://www.facebook.com/" target="_blank" class="facebook">Facebook</a>
+    <a href="https://x.com/" target="_blank" class="twitter">X (Twitter)</a>
+    <a href="https://www.instagram.com/" target="_blank" class="instagram">Instagram</a>
+  </div>
+</body>
+</html>
